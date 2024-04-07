@@ -1,0 +1,48 @@
+
+{% extends 'base.html'%}  {%block title %}Home{% endblock%}
+
+
+{% block body %}
+
+
+<h1 align="center">Notes</h1>
+<ul class="list-group list-group-flush" id="notes">
+    {% for flash in flashes %}
+    <li class="list-group-item">
+            {{ flash.question }}
+        <p>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+                View Answer!
+            </button>
+        </p>
+        <div class="collapse" id="collapse{{ loop.index }}">
+            <div class="card card-body">
+                {{ flash.answer }}
+            </div>
+        </div>
+
+        
+        <form method="POST" action="./delete" style="display: inline">
+            <input type="hidden" value="{{flash.question}}" name="question">
+            <input type="hidden" value="{{flash.answer}}" name="answer">
+            <input type="submit" value="Delete">
+          </form>
+
+    </li>
+    {% endfor %}
+    
+</ul>
+<form method="POST">
+
+  <textarea name="question" id="question" class="form-control"></textarea>
+  <div align="center">
+
+  </br>
+
+    <textarea name="answer" id="answer" class="form-control"></textarea>
+  <div align="center">
+    <button type="submit" class="btn btn-primary">Add Flashcard</button>
+  </div>
+</form>
+
+{% endblock body %}

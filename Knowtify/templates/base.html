@@ -1,0 +1,146 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap" rel="stylesheet">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>{% block title %}{% endblock title %} | Knowtify</title>
+  </head>
+  <body>
+
+    
+
+    <nav class="navbar navbar-expand-lg navbar-dark"  style="background-color: #6C63FF;">
+        <div class="container-fluid">
+          <a class="navbar-brand"><b>Knowtify</b></a>
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+              {% if session %}
+              <a class="nav-link active" id="dashboard" href="/dashboard"><b>Welcome {{session.userinfo.nickname}}!</b></a>
+            
+            <a class="nav-link active" id="home" href="/"><b>Home</b></a>
+            <button class="navbar-toggler">
+            </button>
+
+            <a class="nav-link active" id="flashcards" href="/flashcards"><b>Flashcards</b></a>
+            <button class="navbar-toggler">
+            </button>
+
+
+            <a class="nav-link active" id="dashboard" href="/dashboard"><b>Progress</b></a>
+            <button class="navbar-toggler">
+            </button>
+
+            <a class="nav-link active" id="settings" href="/settings"><b>Settings</b></a>
+            <button class="navbar-toggler">
+            </button>
+
+            <a class="nav-link active" id="login" href="/logout"><b>Logout</b></a>
+            <button class="navbar-toggler">
+            </button>
+
+            <a class="nav-link active" id="contact" href="/contact"><b>Contact</b></a>
+           <button class="navbar-toggler">
+           </button>
+
+           {%else%}
+           <a class="nav-link active" id="login" href="/login"><b>Welcome Guest</b></a>
+           <a class="nav-link active" id="home" href="/"><b>Home</b></a>
+           <button class="navbar-toggler">
+           </button>
+
+           <a class="nav-link active" id="login" href="/login"><b>Login</b></a>
+           <button class="navbar-toggler">
+           </button>
+
+           <a class="nav-link active" id="login" href="/login"><b>Register</b></a>
+           <button class="navbar-toggler">
+           </button>
+
+           <a class="nav-link active" id="contact" href="/contact"><b>Contact</b></a>
+           <button class="navbar-toggler">
+           </button>
+
+           <button class="navbar-toggler">
+           </button>
+            </div>
+            {%endif%}
+        </div>
+    </nav>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %} 
+    {% for category, message in messages %}
+      {% if category =='error' %}
+  
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" ></button>
+  </div>
+
+  {% else %}
+  
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" ></button>
+    </button>
+  </div>
+
+        {% endif %}
+      {% endfor %} 
+    {% endif %} 
+  {% endwith %}
+
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+  <strong>{{ message }}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+
+{% block body %} {% endblock body %}
+
+
+<!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+<!-- Footer -->
+<footer class="bg-light text-center text-lg-start">
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: #6C63FF ;">
+    © 2023 Copyright:
+    <a class="text-dark">Made by a group of students</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
+<script
+      type="text/javascript"
+      src="{{ url_for('static', filename='index.js') }}"
+    ></script>
+
+  </body>
+</html>
