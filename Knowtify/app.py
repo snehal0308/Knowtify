@@ -5,7 +5,7 @@ import os
 import requests    # ← new import\
 import time
 from sqlalchemy.sql.functions import user
-from flask_login import UserMixin
+
 from sqlalchemy.sql import func 
 import json
 
@@ -95,6 +95,9 @@ with app.app_context():
         print('Created Database!')
 
 
+    # Fetch two random entries from the database
+
+
 
 
 @app.route("/")
@@ -129,7 +132,6 @@ def flashcards():
 
     # Query all flashcards
     flashes = Flash.query.all()
-    print(flashes)
 
     return render_template('notes.html', flashes=flashes,  session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
 
@@ -138,7 +140,8 @@ def flashcards():
 def delete():
     question = request.form.get("question")
     answer = request.form.get("answer")
-    flash = Flash.query.filter_by(question=question, answer=answer).first()
+    random_data = Flash.query.order_by(func.random()).limit(1).all()
+    
     dbt.session.delete(flash)
     dbt.session.commit()
     return redirect("/flashcards")
@@ -149,29 +152,36 @@ def sms_reply():
     """Respond to incoming calls with a simple text message."""
     # Fetch the message
     msg = request.form.get('Body').lower()
-    # Fetch two random entries from the database
-    random_data = Flash.query.order_by(func.random()).limit(2).all()
-
-    # Create reply
     resp = MessagingResponse()
+    random_data = Flash.query.first()
+
+    if random_data:  # Check if a record exists
+        random_ques = random_data.question
+        random_ans = random_data.answer
+    
+
+
+
+        
+
     if 'set-up' in msg:
-        resp.message(f"At what times do you want study your quizzes? \t 1) Morning \t 2) Morning - Afternoon  \t 3) Afternoon \t 4) Afternoon \t 5) Afternoon-evening")
-    elif "1"in msg:
-        hour = 10;
-        # scheduler.add_job( 'cron', hour=10)
+        resp.message(f"At what times do you want study your quizzes? \t 1) Morning \t 2) Morning - Afternoon \t 3) Afternoon \t 4) Afternoon \t 5) Afternoon-evening")
+    elif "1" in msg:
+        hour = 10
+    scheduler.add_job( 'cron', hour=10)  
         resp.message("saved!")
-    elif "2" in msg :
+    elif "3" in msg:
         hour = '10-11'
         resp.message("saved!")
-    elif "quiz" in msg :
-        resp.message(random_data.question)
-        if(random_data.answer == msg):
-            resp.message("Correct answer! keep going!!")
-        else:
-            resp.message(f"Wrong answer! but don't lose hope \n The correct answer is:\t {random_data.answer}")
-    
-    return str(resp)
+    elif "quiz" in msg:
+        resp.message(f"the question is {random_ques}")
 
+    elif msg == random_ans:
+        resp.message("Correct answer! keep going!!")
+    else:
+        resp.message(f"Wrong answer! but don't lose hope \n The correct answer is:\t {random_ans}")
+
+    return str(resp)
 
  
 if __name__ == "__main__":
